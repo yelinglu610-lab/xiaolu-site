@@ -410,20 +410,22 @@ function openDetail(det, card, frow) {
 }
 
 document.querySelectorAll('.fvis').forEach(function(card) {
+  var locked = false;
   card.addEventListener('click', function(e) {
-    // 如果点击的是 detail 内部，不触发 toggle
+    if (locked) return;
     var det = this.querySelector('.detail');
     if (!det) return;
-    if (det.contains(e.target) && e.target !== this) return;
-
     var frow = this.closest('.frow');
     if (!frow) return;
     var isOpen = det.classList.contains('open');
 
+    locked = true;
+    setTimeout(function() { locked = false; }, 600);
+
     if (isOpen) {
-      closeDetail(det, this);
+      closeDetail(det, card);
     } else {
-      openDetail(det, this, frow);
+      openDetail(det, card, frow);
     }
   });
 });
