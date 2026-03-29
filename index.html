@@ -69,8 +69,9 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
 .fvis:hover .expand-hint{opacity:1}
 .expand-arrow{display:inline-block;transition:transform .35s}
 .fvis.expanded .expand-arrow{transform:rotate(180deg)}
-.detail{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s;opacity:0;position:relative;z-index:1}
-.detail.open{opacity:1}
+.detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .42s cubic-bezier(.4,0,.2,1);position:relative;z-index:1}
+.detail.open{grid-template-rows:1fr}
+.detail-overflow{overflow:hidden}
 .detail-inner{margin-top:12px;padding:14px 16px;background:#fff8f0;border-radius:14px;border-left:4px solid var(--y);font-size:.81em;line-height:1.85;color:var(--brl)}
 .detail-inner h4{font-size:.88em;font-weight:800;color:var(--br);margin-bottom:10px}
 
@@ -166,10 +167,10 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
         <div class="row"><span>😊 心情指数</span><span class="val">良好</span></div>
       </div>
       <div class="expand-hint"><span class="expand-arrow">▼</span> 点击展开</div>
-      <div class="detail"><div class="detail-inner">
+      <div class="detail"><div class="detail-overflow"><div class="detail-inner">
         <h4>📂 本周数据快照</h4>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-          <div style="background:#fffde7;border-radius:10px;padding:10px;text-align:center"><div style="font-size:1.4em;font-weight:900;color:#e65100">5次</div><div style="font-size:.92em;color:#8B5E3C">运动</div></div>
+          <div style="background:#fffde7;border-radius:10px;padding:10px;text-align:center"><div style="font-size:1.4em;font-weight:900;color:#e65100">5次</div></div><div style="font-size:.92em;color:#8B5E3C">运动</div></div>
           <div style="background:#fffde7;border-radius:10px;padding:10px;text-align:center"><div style="font-size:1.4em;font-weight:900;color:#e65100">7.2h</div><div style="font-size:.92em;color:#8B5E3C">平均睡眠</div></div>
           <div style="background:#fffde7;border-radius:10px;padding:10px;text-align:center"><div style="font-size:1.4em;font-weight:900;color:#e65100">62bpm</div><div style="font-size:.92em;color:#8B5E3C">平均心率</div></div>
           <div style="background:#fffde7;border-radius:10px;padding:10px;text-align:center"><div style="font-size:1.4em;font-weight:900;color:#e65100">8,421</div><div style="font-size:.92em;color:#8B5E3C">日均步数</div></div>
@@ -193,7 +194,7 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
         <div class="br"><div class="bav">🦌</div><div class="bt">跑步心率有氧区占 68%，状态稳！<br>今天 09-11点 是你的黄金时段 💪</div></div>
       </div>
       <div class="expand-hint"><span class="expand-arrow">▼</span> 点击展开</div>
-      <div class="detail"><div class="detail-inner">
+      <div class="detail"><div class="detail-overflow"><div class="detail-inner">
         <h4>📨 今日推送完整示例</h4>
         <div style="background:#fffde7;border-radius:12px;padding:12px;font-size:.92em;line-height:1.85;color:#5D3A1A">
           🦌 早安！今天是周一 3/31<br>
@@ -205,7 +206,7 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
           <br>
           🎯 <b>09-11点</b> 状态最佳，适合重要工作<br>
           ⚠️ <b>12-13点</b> 低谷，避开重要决策
-        </div>
+        </div></div>
       </div></div>
     </div>
     <div class="ftxt">
@@ -224,10 +225,10 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
         <div style="font-size:.92em;color:#8B5E3C;line-height:1.65">连续3天静息心率偏高 +5bpm<br>深睡比例下降 23%<br>→ 建议今晚 22:30 前入睡</div>
       </div>
       <div class="expand-hint"><span class="expand-arrow">▼</span> 点击展开</div>
-      <div class="detail"><div class="detail-inner">
+      <div class="detail"><div class="detail-overflow"><div class="detail-inner">
         <h4>📉 上周低谷期复盘</h4>
         <div style="font-size:.92em;color:#5D3A1A;line-height:1.8">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:30px">周一</div><div style="flex:1;background:#eee;border-radius:4px;height:8px;overflow:hidden"><div style="width:55%;height:100%;background:#66bb6a;border-radius:4px"></div></div><div style="width:45px;text-align:right;color:#66bb6a;font-weight:700">55ms</div></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:30px">周一</div></div><div style="flex:1;background:#eee;border-radius:4px;height:8px;overflow:hidden"><div style="width:55%;height:100%;background:#66bb6a;border-radius:4px"></div></div><div style="width:45px;text-align:right;color:#66bb6a;font-weight:700">55ms</div></div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:30px">周二</div><div style="flex:1;background:#eee;border-radius:4px;height:8px;overflow:hidden"><div style="width:45%;height:100%;background:#ff7043;border-radius:4px"></div></div><div style="width:45px;text-align:right;color:#ff7043;font-weight:700">45ms</div></div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:30px">周三</div><div style="flex:1;background:#eee;border-radius:4px;height:8px;overflow:hidden"><div style="width:32%;height:100%;background:#e53935;border-radius:4px"></div></div><div style="width:45px;text-align:right;color:#e53935;font-weight:700">32ms⚠️</div></div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:30px">周四</div><div style="flex:1;background:#eee;border-radius:4px;height:8px;overflow:hidden"><div style="width:50%;height:100%;background:#ff7043;border-radius:4px"></div></div><div style="width:45px;text-align:right;color:#ff7043;font-weight:700">50ms↑</div></div>
@@ -252,10 +253,10 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
         <div class="br"><div class="bav">🦌</div><div class="bt">26F · 2603摄影（3人）✅<br>已预订！ID 6076893</div></div>
       </div>
       <div class="expand-hint"><span class="expand-arrow">▼</span> 点击展开</div>
-      <div class="detail"><div class="detail-inner">
+      <div class="detail"><div class="detail-overflow"><div class="detail-inner">
         <h4>🗓️ 明天下午可用会议室</h4>
         <div style="font-size:.92em;color:#5D3A1A;line-height:2">
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>26F · 2603摄影</span><span style="color:#43a047;font-weight:700">3人 ✅ 推荐</span></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>26F · 2603摄影</span><span style="color:#43a047;font-weight:700">3人 ✅ 推荐</span></div></div>
           <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>30F · 3018炸鸡店</span><span style="color:#43a047;font-weight:700">2人 ✅ 空闲</span></div>
           <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>28F · 2801大提琴</span><span style="color:#e53935;font-weight:700">✗ 已占用</span></div>
           <div style="display:flex;justify-content:space-between;padding:4px 0"><span>27F · 2708书房</span><span style="color:#43a047;font-weight:700">18人 ✅ 空闲</span></div>
@@ -281,10 +282,10 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
         <div class="br"><div class="bav">🦌</div><div class="bt">12:00 提醒你读 📍 + 3条全网参考</div></div>
       </div>
       <div class="expand-hint"><span class="expand-arrow">▼</span> 点击展开</div>
-      <div class="detail"><div class="detail-inner">
+      <div class="detail"><div class="detail-overflow"><div class="detail-inner">
         <h4>📚 今日待读队列</h4>
         <div style="font-size:.92em;color:#5D3A1A">
-          <div style="background:#fffde7;border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>AI企服赛道融资报告</b><span style="background:#fff3e0;color:#e65100;border-radius:999px;padding:1px 8px;font-size:.92em;font-weight:700">赛道</span></div><div style="color:#8B5E3C;font-size:.92em">36kr · 09:23收到 · 📍12:00提醒</div></div>
+          <div style="background:#fffde7;border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>AI企服赛道融资报告</b><span style="background:#fff3e0;color:#e65100;border-radius:999px;padding:1px 8px;font-size:.92em;font-weight:700">赛道</span></div></div><div style="color:#8B5E3C;font-size:.92em">36kr · 09:23收到 · 📍12:00提醒</div></div>
           <div style="background:#fffde7;border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>某消费品牌 BP</b><span style="background:#e8f5e9;color:#2e7d32;border-radius:999px;padding:1px 8px;font-size:.92em;font-weight:700">项目</span></div><div style="color:#8B5E3C;font-size:.92em">PDF · 14:05收到 · 📍16:00提醒</div></div>
           <div style="background:#fffde7;border-radius:10px;padding:10px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>小红书社区运营方法论</b><span style="background:#e3f2fd;color:#1565c0;border-radius:999px;padding:1px 8px;font-size:.92em;font-weight:700">感兴趣</span></div><div style="color:#8B5E3C;font-size:.92em">小红书笔记 · 昨晚 · 📍明日08:00</div></div></div></div></div>
     </div>
@@ -306,10 +307,10 @@ body{font-family:'Nunito','PingFang SC',sans-serif;background:#FFFDE7;color:var(
         <div class="br"><div class="bav">🦌</div><div class="bt">记好了 💪 今天心率低，你吃得好有功劳～</div></div>
       </div>
       <div class="expand-hint"><span class="expand-arrow">▼</span> 点击展开</div>
-      <div class="detail"><div class="detail-inner">
+      <div class="detail"><div class="detail-overflow"><div class="detail-inner">
         <h4>🧠 本周记忆存档</h4>
         <div style="font-size:.92em;color:#5D3A1A;line-height:2">
-          <div style="display:flex;gap:8px;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>🍜</span><div><b>周一午饭</b> 鸡胸肉沙拉 → 当天静息心率 62bpm 🟢</div></div>
+          <div style="display:flex;gap:8px;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>🍜</span><div><b>周一午饭</b> 鸡胸肉沙拉 → 当天静息心率 62bpm 🟢</div></div></div>
           <div style="display:flex;gap:8px;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>🍜</span><div><b>周三晚饭</b> 火锅 → 次日深睡↓23% 🔴</div></div>
           <div style="display:flex;gap:8px;border-bottom:1px solid #ffe0b2;padding:4px 0"><span>📝</span><div><b>备忘</b> 下周一约了牙医 · <span style="color:#e65100">明日提醒</span></div></div>
           <div style="display:flex;gap:8px;padding:4px 0"><span>🏋️</span><div><b>健身</b> 周三力量训练 · 已完成 ✅</div></div>
@@ -381,28 +382,13 @@ document.querySelectorAll('.ripple-host').forEach(function(el) {
 
 // 展开卡片（真实高度动画）
 function closeDetail(det, card) {
-  var h = det.scrollHeight;
-  det.style.maxHeight = h + 'px';
-  det.getBoundingClientRect(); // force reflow
-  det.style.transition = 'max-height 0.4s cubic-bezier(.4,0,.2,1), opacity 0.3s';
-  det.style.maxHeight = '0';
-  det.style.opacity = '0';
+  det.classList.remove('open');
   card.classList.remove('expanded');
-  setTimeout(function() { det.classList.remove('open'); det.style.maxHeight = ''; det.style.opacity = ''; det.style.transition = ''; }, 420);
 }
 
 function openDetail(det, card, frow) {
   det.classList.add('open');
-  det.style.maxHeight = '0';
-  det.style.opacity = '0';
-  det.getBoundingClientRect(); // force reflow
-  var h = det.scrollHeight;
-  det.style.transition = 'max-height 0.45s cubic-bezier(.4,0,.2,1), opacity 0.35s';
-  det.style.maxHeight = h + 'px';
-  det.style.opacity = '1';
   card.classList.add('expanded');
-  setTimeout(function() { det.style.maxHeight = ''; det.style.opacity = ''; det.style.transition = ''; }, 500);
-  // scroll 让 frow 顶部对齐视口，留 24px 间距
   setTimeout(function() {
     var top = frow.getBoundingClientRect().top + window.scrollY - 24;
     window.scrollTo({ top: top, behavior: 'smooth' });
@@ -410,22 +396,19 @@ function openDetail(det, card, frow) {
 }
 
 document.querySelectorAll('.fvis').forEach(function(card) {
-  var locked = false;
   card.addEventListener('click', function(e) {
-    if (locked) return;
     var det = this.querySelector('.detail');
     if (!det) return;
+    // 点击 detail 内部不触发
+    var inner = det.querySelector('.detail-overflow');
+    if (inner && inner.contains(e.target)) return;
     var frow = this.closest('.frow');
     if (!frow) return;
     var isOpen = det.classList.contains('open');
-
-    locked = true;
-    setTimeout(function() { locked = false; }, 600);
-
     if (isOpen) {
-      closeDetail(det, card);
+      closeDetail(det, this);
     } else {
-      openDetail(det, card, frow);
+      openDetail(det, this, frow);
     }
   });
 });
