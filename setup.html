@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小鹿配置向导 🦌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #FFD600;
+      --cream: #FFFDE7;
+      --brown: #5D3A1A;
+      --orange: #FF8F00;
+      --orange-light: #FFA726;
+      --green: #2E7D32;
+      --green-light: #4CAF50;
+      --card-shadow: 0 8px 32px rgba(93,58,26,0.12);
+      --radius: 20px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Nunito', -apple-system, sans-serif;
+      background: var(--yellow);
+      color: var(--brown);
+      overflow: hidden;
+    }
+
+    /* ── Step container ───────────────────────────────── */
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .step {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      opacity: 0;
+      transform: translateX(60px);
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .step.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+
+    .step.exit {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* ── Cards ────────────────────────────────────────── */
+    .card {
+      background: var(--cream);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      padding: 40px 36px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .card.wide { max-width: 580px; }
+
+    /* ── Typography ───────────────────────────────────── */
+    .deer-emoji { font-size: 80px; line-height: 1; margin-bottom: 16px; }
+    .step-icon  { font-size: 56px; line-height: 1; margin-bottom: 12px; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--brown);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--brown);
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #8D6E53;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* ── Privacy badge ────────────────────────────────── */
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #E8F5E9;
+      color: var(--green);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Buttons ──────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 100px;
+      padding: 14px 36px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(255,143,0,0.35);
+      text-decoration: none;
+    }
+
+    .btn:hover  { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,143,0,0.45); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── Step 1: instruction list ─────────────────────── */
+    .instruction-list {
+      list-style: none;
+      text-align: left;
+      margin: 0 0 28px;
+    }
+
+    .instruction-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #F5E6C8;
+      font-size: 0.97rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--brown);
+    }
+
+    .instruction-list li:last-child { border-bottom: none; }
+
+    .instruction-list .icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Step 2: upload area ──────────────────────────── */
+    #drop-zone {
+      border: 3px dashed var(--orange);
+      border-radius: var(--radius);
+      background: #FFF8E1;
+      padding: 40px 20px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      margin-bottom: 20px;
+    }
+
+    #drop-zone.drag-over {
+      background: #FFE082;
+      border-color: var(--brown);
+    }
+
+    #drop-zone.has-file {
+      background: #E8F5E9;
+      border-color: var(--green-light);
+    }
+
+    .drop-icon  { font-size: 48px; margin-bottom: 10px; }
+    .drop-label { font-size: 1rem; font-weight: 700; color: var(--brown); margin-bottom: 4px; }
+    .drop-sub   { font-size: 0.82rem; font-weight: 600; color: #A1887F; }
+
+    #file-input { display: none; }
+
+    /* ── Progress bar ─────────────────────────────────── */
+    .progress-wrap {
+      background: #F5E6C8;
+      border-radius: 100px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .progress-wrap.visible { display: block; }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--orange), #FFD600);
+      border-radius: 100px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #8D6E53;
+      margin-bottom: 16px;
+      min-height: 20px;
+    }
+
+    /* ── Success message ──────────────────────────────── */
+    .success-msg {
+      display: none;
+      background: #E8F5E9;
+      color: var(--green);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .success-msg.visible { display: block; }
+
+    /* ── Error message ────────────────────────────────── */
+    .error-msg {
+      display: none;
+      background: #FFEBEE;
+      color: #C62828;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      word-break: break-word;
+    }
+
+    .error-msg.visible { display: block; }
+
+    /* ── Step 3: fake progress ────────────────────────── */
+    .skill-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #F5E6C8;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .skill-item:last-child { border-bottom: none; }
+
+    .skill-badge {
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .badge-pending  { background: #FFF8E1; color: var(--orange); }
+    .badge-loading  { background: #E3F2FD; color: #1565C0; }
+    .badge-done     { background: #E8F5E9; color: var(--green); }
+
+    .coming-soon-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #A1887F;
+      margin: 10px 0 20px;
+    }
+
+    /* ── Step 4: feature list ─────────────────────────── */
+    .feature-list {
+      list-style: none;
+      text-align: left;
+      margin: 0 0 28px;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 6px;
+      background: #FFF8E1;
+    }
+
+    /* ── Step indicator ───────────────────────────────── */
+    .dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(93,58,26,0.2);
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .dot.active { background: var(--orange); transform: scale(1.4); }
+    .dot.done   { background: var(--brown); }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px; }
+      h1 { font-size: 1.6rem; }
+      h2 { font-size: 1.3rem; }
+      .deer-emoji { font-size: 64px; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Step 0: Welcome ──────────────────────────────────── -->
+  <div class="step active" id="step-0">
+    <div class="card">
+      <div class="deer-emoji">🦌</div>
+      <h1>你好！我是小鹿 🦌</h1>
+      <p class="subtitle">引导你完成配置，打通 Apple Watch 健康数据<br />只需几步，马上开始！</p>
+      <div class="privacy-badge">🔒 健康数据完全保密，仅存储在你的 GitHub 仓库</div>
+      <br />
+      <button class="btn" onclick="goTo(1)">开始配置 →</button>
+    </div>
+    <div class="dots">
+      <div class="dot active" id="dot-0"></div>
+      <div class="dot" id="dot-1"></div>
+      <div class="dot" id="dot-2"></div>
+      <div class="dot" id="dot-3"></div>
+      <div class="dot" id="dot-4"></div>
+    </div>
+  </div>
+
+  <!-- ── Step 1: Export Instructions ─────────────────────── -->
+  <div class="step" id="step-1">
+    <div class="card wide">
+      <div class="step-icon">📱</div>
+      <h2>第一步：导出 Apple Watch 数据</h2>
+      <p class="subtitle">在 iPhone 上操作，2 分钟搞定</p>
+      <ul class="instruction-list">
+        <li><span class="icon">❤️</span><span>打开 iPhone 上的「健康」App</span></li>
+        <li><span class="icon">👤</span><span>点击右上角你的头像 / 用户图标</span></li>
+        <li><span class="icon">📤</span><span>下拉到底部，点击「导出所有健康数据」</span></li>
+        <li><span class="icon">⏳</span><span>等待系统生成 zip 文件（数据多时需要 1-3 分钟）</span></li>
+        <li><span class="icon">💾</span><span>选择「存储到文件」，保存到 iPhone 本地或 iCloud Drive</span></li>
+      </ul>
+      <button class="btn" onclick="goTo(2)">我已导出 →</button>
+    </div>
+    <div class="dots">
+      <div class="dot done" id="dot-0-1"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- ── Step 2: Upload ZIP ───────────────────────────────── -->
+  <div class="step" id="step-2">
+    <div class="card wide">
+      <div class="step-icon">☁️</div>
+      <h2>第二步：上传健康数据</h2>
+      <p class="subtitle">把刚才导出的 zip 文件拖进来，或点击选择</p>
+
+      <div id="drop-zone" onclick="document.getElementById('file-input').click()"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <div class="drop-icon" id="drop-icon">📦</div>
+        <div class="drop-label" id="drop-label">拖拽 .zip 文件到这里</div>
+        <div class="drop-sub" id="drop-sub">或点击选择文件（最大 50MB）</div>
+      </div>
+      <input type="file" id="file-input" accept=".zip" onchange="onFileSelect(event)" />
+
+      <div class="progress-wrap" id="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-label" id="progress-label"></div>
+
+      <div class="success-msg" id="success-msg">✅ 解析成功！找到健康数据</div>
+      <div class="error-msg" id="error-msg"></div>
+
+      <button class="btn" id="upload-btn" onclick="startUpload()" disabled>上传文件 →</button>
+    </div>
+    <div class="dots">
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- ── Step 3: Skills (placeholder) ────────────────────── -->
+  <div class="step" id="step-3">
+    <div class="card">
+      <div class="step-icon">🧩</div>
+      <h2>第三步：安装小鹿 Skills</h2>
+      <p class="coming-soon-label">即将上架 ClawHub，敬请期待！</p>
+
+      <div style="text-align:left; margin-bottom: 24px;">
+        <div class="skill-item">
+          <span>🍎 apple-health-adviser</span>
+          <span class="skill-badge badge-loading" id="skill-badge-1">安装中…</span>
+        </div>
+        <div class="skill-item">
+          <span>📅 xiaojian-meeting</span>
+          <span class="skill-badge badge-pending" id="skill-badge-2">等待中</span>
+        </div>
+        <div class="skill-item">
+          <span>📖 xiaolu-readlist</span>
+          <span class="skill-badge badge-pending" id="skill-badge-3">等待中</span>
+        </div>
+      </div>
+
+      <div class="progress-wrap visible" id="skill-progress-wrap">
+        <div class="progress-bar" id="skill-progress-bar"></div>
+      </div>
+      <div class="progress-label" id="skill-progress-label">正在安装…</div>
+    </div>
+    <div class="dots">
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- ── Step 4: Done ─────────────────────────────────────── -->
+  <div class="step" id="step-4">
+    <div class="card">
+      <div style="font-size: 72px; margin-bottom: 16px;">✅</div>
+      <h1>配置完成！<br/>小鹿已准备好 🦌</h1>
+      <p class="subtitle" style="margin-top: 12px;">以下功能现已开启</p>
+
+      <ul class="feature-list">
+        <li>⏰ 每天早上 8 点推送健康报告</li>
+        <li>🏢 智能帮你订会议室</li>
+        <li>📚 待读清单自动整理</li>
+        <li>🥗 说「记饮食：xxx」即可记录</li>
+      </ul>
+
+      <a class="btn" href="https://xiaolu-site.pages.dev">返回首页 →</a>
+    </div>
+    <div class="dots">
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot done"></div>
+      <div class="dot active"></div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+  // ── User ID ──────────────────────────────────────────────
+  function getUserId() {
+    let uid = localStorage.getItem('xiaolu_user_id');
+    if (!uid) {
+      uid = 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+      localStorage.setItem('xiaolu_user_id', uid);
+    }
+    return uid;
+  }
+
+  // ── Navigation ───────────────────────────────────────────
+  let currentStep = 0;
+
+  function goTo(n) {
+    const from = document.getElementById('step-' + currentStep);
+    const to   = document.getElementById('step-' + n);
+    if (!to) return;
+
+    from.classList.add('exit');
+    setTimeout(() => {
+      from.classList.remove('active', 'exit');
+    }, 400);
+
+    // Reset transform so the incoming step slides in from the right
+    to.style.transform = 'translateX(60px)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        to.classList.add('active');
+      });
+    });
+
+    currentStep = n;
+
+    // Trigger step-specific logic
+    if (n === 3) startFakeSkillInstall();
+  }
+
+  // ── Drag & Drop ──────────────────────────────────────────
+  let selectedFile = null;
+
+  function onDragOver(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.add('drag-over');
+  }
+
+  function onDragLeave(e) {
+    document.getElementById('drop-zone').classList.remove('drag-over');
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) setFile(file);
+  }
+
+  function onFileSelect(e) {
+    const file = e.target.files[0];
+    if (file) setFile(file);
+  }
+
+  function setFile(file) {
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      showError('请选择 .zip 格式的文件');
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      showError('文件超过 50MB 限制，请检查文件');
+      return;
+    }
+    selectedFile = file;
+    hideError();
+
+    const zone = document.getElementById('drop-zone');
+    zone.classList.add('has-file');
+    document.getElementById('drop-icon').textContent = '✅';
+    document.getElementById('drop-label').textContent = file.name;
+    document.getElementById('drop-sub').textContent = formatBytes(file.size);
+    document.getElementById('upload-btn').disabled = false;
+  }
+
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  // ── Upload ───────────────────────────────────────────────
+  const WORKER_URL = 'https://health-ingest.yelinglu610.workers.dev/upload-zip';
+  const AUTH_KEY   = 'health-2026-abc123';
+
+  async function startUpload() {
+    if (!selectedFile) return;
+
+    const btn = document.getElementById('upload-btn');
+    btn.disabled = true;
+
+    showProgress(0, '准备上传…');
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('user_id', getUserId());
+
+    // Use XMLHttpRequest for real progress events
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', WORKER_URL);
+    xhr.setRequestHeader('X-Auth-Key', AUTH_KEY);
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 90); // cap at 90% until server responds
+        showProgress(pct, `上传中… ${pct}%`);
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      showProgress(100, '上传完成，解析中…');
+      let data;
+      try { data = JSON.parse(xhr.responseText); } catch { data = {}; }
+
+      if (xhr.status >= 200 && xhr.status < 300 && data.ok) {
+        setTimeout(() => {
+          document.getElementById('progress-wrap').classList.remove('visible');
+          document.getElementById('progress-label').textContent = '';
+          document.getElementById('success-msg').classList.add('visible');
+          setTimeout(() => goTo(3), 3000);
+        }, 600);
+      } else {
+        const detail = data.error || data.detail || `HTTP ${xhr.status}`;
+        showError(`上传失败：${detail}`);
+        btn.disabled = false;
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      showError('网络错误，请检查连接后重试');
+      btn.disabled = false;
+    });
+
+    xhr.addEventListener('timeout', () => {
+      showError('请求超时，请重试');
+      btn.disabled = false;
+    });
+
+    xhr.timeout = 120000; // 2 min
+    xhr.send(formData);
+  }
+
+  function showProgress(pct, label) {
+    document.getElementById('progress-wrap').classList.add('visible');
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = label;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = '⚠️ ' + msg;
+    el.classList.add('visible');
+  }
+
+  function hideError() {
+    document.getElementById('error-msg').classList.remove('visible');
+  }
+
+  // ── Fake skill install (Step 3) ──────────────────────────
+  function startFakeSkillInstall() {
+    const bar   = document.getElementById('skill-progress-bar');
+    const label = document.getElementById('skill-progress-label');
+    const b1    = document.getElementById('skill-badge-1');
+    const b2    = document.getElementById('skill-badge-2');
+    const b3    = document.getElementById('skill-badge-3');
+
+    bar.style.width = '0%';
+    b1.textContent = '安装中…'; b1.className = 'skill-badge badge-loading';
+    b2.textContent = '等待中';  b2.className = 'skill-badge badge-pending';
+    b3.textContent = '等待中';  b3.className = 'skill-badge badge-pending';
+    label.textContent = '正在安装 apple-health-adviser…';
+
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct += 3;
+      bar.style.width = Math.min(pct, 100) + '%';
+
+      if (pct === 33) {
+        b1.textContent = '✅ 已安装'; b1.className = 'skill-badge badge-done';
+        b2.textContent = '安装中…';  b2.className = 'skill-badge badge-loading';
+        label.textContent = '正在安装 xiaojian-meeting…';
+      }
+      if (pct === 66) {
+        b2.textContent = '✅ 已安装'; b2.className = 'skill-badge badge-done';
+        b3.textContent = '安装中…';  b3.className = 'skill-badge badge-loading';
+        label.textContent = '正在安装 xiaolu-readlist…';
+      }
+      if (pct >= 100) {
+        clearInterval(interval);
+        b3.textContent = '✅ 已安装'; b3.className = 'skill-badge badge-done';
+        label.textContent = '全部安装完成！';
+        setTimeout(() => goTo(4), 1000);
+      }
+    }, 90); // ~3 seconds total
+  }
+</script>
+</body>
+</html>
